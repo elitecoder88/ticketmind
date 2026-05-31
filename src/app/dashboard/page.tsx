@@ -41,7 +41,7 @@ export default function DashboardPage() {
       <p className="mt-1 text-sm text-gray-500">Monitor your support pipeline at a glance.</p>
 
       {/* Stat cards grid */}
-      <div className="grid grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 xl:grid-cols-4">
           {/* All 4 Card  */}
           {stats.map((stat) => {
             const isGood = stat.isPositiveGood ? stat.trend >= 0 : stat.trend <= 0;
@@ -62,12 +62,12 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Tickets & Trending Categories grid */}
-      <div className="grid grid-cols-3 gap-6 mt-6 items-start">
+      <div className="grid grid-cols-1 gap-6 mt-6 items-start lg:grid-cols-3">
 
         {/* Recent Tickets */}
-        <div className="col-span-2 bg-white rounded-xl shadow-sm border border-slate-50">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-50 lg:col-span-2">
           <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="font-semibold">Recent Ticket</h2>
+            <h2 className="font-semibold">Recent Tickets</h2>
           </div>
           {tickets.map((ticket) => {
             return (
