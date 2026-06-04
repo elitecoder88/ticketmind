@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Channel {
+  EMAIL
+  LIVE_CHAT
+  WEB_FORM
+}
+
+enum Role {
+  ADMIN
+  AGENT
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum Sender {
+  CUSTOMER
+  AGENT
+  AI
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+  URGENT
+}
+
+model Organization {
+  id String @id @default(cuid())
+  name String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clerkOrgId String @unique
+
+  members Member[]
+  tickets Ticket[]
+  categories Category[]
+}
+
+model Member {
+  id String @id @default(cuid())
+  clerkUserId String @unique
+  role Role @default(AGENT)
+
+  organizationId String
+  organization Organization  @relation(fields: [organizationId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  assignedTickets Ticket[]
+
+  // Optimization: faster lookup for org team lists
+  @@index([organizationId])
+}
+
+model Ticket {
+  id String @id @default(cuid())
+  subject String
+  body String
+  status Status @default(OPEN)
+  priority Priority @default(MEDIUM)
+  channel Channel @default(WEB_FORM)
+
+  customerName String
+  customerEmail String
+
+  // AI field
+  aiCategory String?
+  aiSentiment Sentiment?
+  aiSuggestion String?
+  aiConfidence Float?
+
+  organizationId String
+  organization Organization  @relation(fields: [organizationId], references: [id])
+
+  categoryId String?
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  assignedToId String?
+  assignedTo Member? @relation(fields: [assignedToId], references: [id])
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  resolvedAt DateTime?
+
+  // Crucial multi-tenant indexes for lightning-fast dashboard loads
+  @@index([organizationId])
+  @@index([categoryId])
+  @@index([assignedToId])
+}
+
+model Category {
+  id String @id @default(cuid())
+  name String
+
+  organizationId String
+  organization Organization  @relation(fields: [organizationId], references: [id])
+
+  description String
+  tickets Ticket[]
+
+  // Optimization: Grouping metrics for Trending Categories
+  @@index([organizationId])
+}
+
+model Message {
+  id String @id @default(cuid())
+  body String
+  senderType Sender
+
+  ticketId String
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+
+  createdAt DateTime @default(now())
+
+  // Optimization: speeds up message threads rendering
+  @@index([ticketId])
+}
