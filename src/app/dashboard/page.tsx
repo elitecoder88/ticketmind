@@ -1,17 +1,21 @@
-export default function DashboardPage() {
+import { prisma } from "@/lib/db";
+
+export default async function DashboardPage() {
+  const tickets = await prisma.ticket.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });  
+  
+  const totalickets = await prisma.ticket.count();
+  const openTickets = await prisma.ticket.count({
+    where: { status: "OPEN" },
+  });
+
   const stats = [
-    { label:"Total Tickets", value: "147", trend: 8, trendLabel: "vs last week", isPositiveGood: true },
-    { label:"Open Tickets", value: "23", trend: 8, trendLabel: "vs last week", isPositiveGood: false },
+    { label:"Total Tickets", value: totalickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: true },
+    { label:"Open Tickets", value: openTickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: false },
     { label:"Resolved Today", value: "12", trend: 15, trendLabel: "vs yesterday", isPositiveGood: true },
     { label:"Avg Response Time", value: "24m", trend: -10, trendLabel: "vs last week", isPositiveGood: false },
-  ];
-
-  const tickets = [
-    { id: 1, subject: "Cannot access my account after password reset", senderName: "Sarah Chen", sentiment: "NEGATIVE", status: "OPEN" },
-    { id: 2, subject: "How do I upgrade my subscription plan?", senderName: "Marcus Johnson", sentiment: "NEUTRAL", status: "IN_PROGRESS" },
-    { id: 3, subject: "URGENT: Production API returning 500 errors", senderName: "Alex Kim", sentiment: "URGENT", status: "OPEN" },
-    { id: 4, subject: "Great experience with your support team!", senderName: "Priya Patel", sentiment: "POSITIVE", status: "RESOLVED" },
-    { id: 5, subject: "Integration with Slack not syncing messages", senderName: "Tomoko Sato", sentiment: "NEGATIVE", status: "IN_PROGRESS" },
   ];
 
   const categories = [
@@ -74,13 +78,15 @@ export default function DashboardPage() {
               <div key={ticket.id} className="px-5 py-3 border-b border-gray-100 last:border-b-0 flex justify-between items-center">
                 <div>
                   <p className="text-sm font-medium">{ticket.subject}</p>
-                  <p className="text-xs text-gray-500 mt-1">{ticket.senderName}</p>
+                  <p className="text-xs text-gray-500 mt-1">{ticket.customerName}</p>
                 </div>
 
                 <div className="px-2 py-1 rounded-full flex gap-2">
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${sentimentColors[ticket.sentiment]}`}>
-                    {ticket.sentiment}
-                  </span>
+                  {ticket.aiSentiment && (
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${sentimentColors[ticket.aiSentiment]}`}>
+                      {ticket.aiSentiment}
+                    </span>
+                  )}
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[ticket.status]}`}>
                     {ticket.status}
                   </span>
