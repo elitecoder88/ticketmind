@@ -24,7 +24,8 @@ export async function POST(request: Request) {
         body: body.body,
         customerName: body.customerName,
         customerEmail: body.customerEmail,
-        organizationId: body.organizationId
+        organizationId: body.organizationId,
+        priority: body.priority
       },
     });
 

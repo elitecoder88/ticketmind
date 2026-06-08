@@ -6,13 +6,13 @@ export default async function DashboardPage() {
     take: 5,
   });  
   
-  const totalickets = await prisma.ticket.count();
+  const totalTickets = await prisma.ticket.count();
   const openTickets = await prisma.ticket.count({
     where: { status: "OPEN" },
   });
 
   const stats = [
-    { label:"Total Tickets", value: totalickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: true },
+    { label:"Total Tickets", value: totalTickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: true },
     { label:"Open Tickets", value: openTickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: false },
     { label:"Resolved Today", value: "12", trend: 15, trendLabel: "vs yesterday", isPositiveGood: true },
     { label:"Avg Response Time", value: "24m", trend: -10, trendLabel: "vs last week", isPositiveGood: false },
