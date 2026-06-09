@@ -12,7 +12,7 @@ export default async function TicketListPage() {
       organizationId: "org-test-1", // hard coded for now // TODO: Change Later
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "desc", // Desc order
     }
   });
 
