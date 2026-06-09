@@ -1,47 +1,15 @@
 import { prisma } from "@/lib/db";
 import { Plus, AlertCircle, Clock, CheckCircle2, ShieldAlert } from "lucide-react";
 import Link from "next/link";
+import StatusBadge from "@/components/status-badge";
+import PriorityBadge from "@/components/priority-badge";
 import { Button } from "@/components/ui/button";
-
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    OPEN: "bg-blue-50 text-blue-700 border border-blue-200",
-    IN_PROGRESS: "bg-amber-50 text-amber-800 border border-amber-200",
-    RESOLVED: "bg-green-50 text-green-700 border border-green-200/60",
-    CLOSED: "bg-slate-100 text-slate-500 border border-slate-200/60",
-  };
-
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status] || styles.OPEN}`}>
-      {status.replace("_", " ")}
-    </span>
-  );
-}
-
-function PriorityBadge({ priority}: { priority: string }) {
-  const config: Record<string, { label: string; className: string; icon: any }> = {
-    LOW: { label: "Low", className: "text-slate-500 bg-slate-50", icon: Clock },
-    MEDIUM: { label: "Medium", className: "text-blue-600 bg-blue-50", icon: Clock },
-    HIGH: { label: "High", className: "text-amber-600 bg-amber-50", icon: AlertCircle },
-    URGENT: { label: "Urgent", className: "text-red-600 bg-red-50 animate-pulse", icon: ShieldAlert },
-  };
-
-  const current = config[priority] || config.MEDIUM;
-  const Icon = current.icon;
-
-  return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${current.className}`}>
-      <Icon className="w-3 h-3" />
-      {current.label}
-    </span>
-  );
-}
 
 export default async function TicketListPage() {
 
   const tickets = await prisma.ticket.findMany({
     where: {
-      organizationId: "org-test-1", // hard coded for now
+      organizationId: "org-test-1", // hard coded for now // TODO: Change Later
     },
     orderBy: {
       createdAt: "desc",
@@ -102,7 +70,7 @@ export default async function TicketListPage() {
                     <td className="py-4 px-6 max-w-md"> 
                       <div className="flex flex-col space-y-1">
                         <span className="font-semibold text-slate-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                          {ticket.subject}
+                          <Link href={`/dashboard/tickets/${ticket.id}`}>{ticket.subject}</Link>
                         </span>
                         <div className="flex items-center gap-2 text-xs text-slate-400">
                           <span className="font-medium text-slate-600">{ticket.customerName}</span>
