@@ -36,7 +36,8 @@ export default async function DashboardPage() {
   const statusColors: Record<string, string> = {
     OPEN: "bg-blue-50 text-blue-700 border border-blue-200",
     IN_PROGRESS: "bg-amber-50 text-amber-800 border border-amber-200",
-    RESOLVED: "bg-slate-100 text-slate-500 border border-slate-200/60",
+    RESOLVED: "bg-green-50 text-green-700 border border-green-200/60",
+    CLOSED: "bg-slate-100 text-slate-500 border border-slate-200/60",
   };
 
   return (
