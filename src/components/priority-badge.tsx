@@ -1,6 +1,6 @@
 import { AlertCircle, Clock, ShieldAlert } from "lucide-react";
 
-function PriorityBadge({ priority}: { priority: string }) {
+export default function PriorityBadge({ priority}: { priority: string }) {
   const config: Record<string, { label: string; className: string; icon: any }> = {
     LOW: { label: "Low", className: "text-slate-500 bg-slate-50", icon: Clock },
     MEDIUM: { label: "Medium", className: "text-blue-600 bg-blue-50", icon: Clock },
@@ -19,4 +19,3 @@ function PriorityBadge({ priority}: { priority: string }) {
   );
 }
 
-export default PriorityBadge;

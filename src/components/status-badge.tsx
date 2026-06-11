@@ -1,4 +1,4 @@
-function StatusBadge({ status }: { status: string }) {
+export default function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     OPEN: "bg-blue-50 text-blue-700 border border-blue-200",
     IN_PROGRESS: "bg-amber-50 text-amber-800 border border-amber-200",
@@ -12,5 +12,3 @@ function StatusBadge({ status }: { status: string }) {
     </span>
   );
 }
-
-export default StatusBadge;

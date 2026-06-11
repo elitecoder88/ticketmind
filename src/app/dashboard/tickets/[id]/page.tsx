@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
-import StatusBadge from "@/components/status-badge";
+import StatusUpdate from "@/components/status-update";
 import PriorityBadge from "@/components/priority-badge";
 import { notFound } from "next/navigation";
 
@@ -71,7 +71,7 @@ export default async function TicketDetailPage({
               Status
             </span>
             <div className="text-sm font-medium text-slate-800">
-              <StatusBadge status ={ticket.status} />
+              <StatusUpdate ticketId={ticket.id} currentStatus={ticket.status} />
             </div>
           </div>
 
