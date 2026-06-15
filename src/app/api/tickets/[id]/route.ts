@@ -23,7 +23,7 @@ export async function PATCH(request: Request,  { params } : { params: Promise<{ 
     return NextResponse.json(ticket);
     
   } catch (error) {
-    return NextResponse.json({ error: "Failed to update ticket status" }, { status: 404 });
+    return NextResponse.json({ error: "Failed to update ticket status" }, { status: 500 });
   }
 
 }
