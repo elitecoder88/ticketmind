@@ -57,6 +57,19 @@ export default async function TicketDetailPage({
               {ticket.body}
             </p>
           </div>
+
+          {/* AI Suggested Response */}
+          {ticket.aiSuggestion && (
+            <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/30 rounded-xl border border-blue-200/40 shadow-sm p-6">
+              <h2 className="text-xs font-semibold text-blue-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+                ✨ AI Suggested Response
+              </h2>
+              <p className="text-slate-700 whitespace-pre-wrap leading-relaxed">
+                {ticket.aiSuggestion}
+              </p>
+            </div>
+          )}
+
         </div>
 
         {/* Right Side: Metadata Sidebar */}
@@ -84,6 +97,35 @@ export default async function TicketDetailPage({
               <PriorityBadge priority={ticket.priority} />
             </div>
           </div>
+
+          {/* AI Category Metadata Field */}
+          {ticket.aiCategory && (
+            <div className="space-y-1.5">
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block">
+                AI Category
+              </span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                {ticket.aiCategory}
+              </span>
+            </div>
+          )}
+
+          {/* AI Sentiment Metadata Field */}
+          {ticket.aiSentiment && (
+            <div className="space-y-1.5">
+              <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block">
+                AI Sentiment
+              </span>
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                ticket.aiSentiment === "POSITIVE" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                ticket.aiSentiment === "NEUTRAL" ? "bg-slate-100 text-slate-700" :
+                ticket.aiSentiment === "NEGATIVE" ? "bg-orange-50 text-orange-700 border border-orange-200" :
+                "bg-red-50 text-red-700 border border-red-200 animate-pulse"
+              }`}>
+                {ticket.aiSentiment}
+              </span>
+            </div>
+          )}
 
           {/* Date Field */}
           <div className="space-y-1.5 pt-2 border-t border-slate-100">
