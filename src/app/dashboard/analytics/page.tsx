@@ -196,7 +196,7 @@ export default async function AnalyticsPage() {
                     {/* Label Row */}
                     <div className="flex justify-between text-sm font-medium">
                       <span className="text-slate-700 uppercase tracking-wide text-xs bg-slate-50 border border-slate-200/50 rounded px-2 py-0.5">
-                        {group.aiCategory?.replace("_", " ")}
+                        {group.aiCategory?.replace(/_/g, " ")}
                       </span>
                       <span className="text-slate-500 text-xs font-semibold">
                         {group._count.id} {group._count.id === 1 ? 'ticket' : 'tickets'} ({percentage}%)
