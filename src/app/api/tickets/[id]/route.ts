@@ -17,8 +17,11 @@ export async function PATCH(request: Request,  { params } : { params: Promise<{ 
 
     const ticket = await prisma.ticket.update({
       where: { id },
-      data: { status: newStatus }
-    })
+      data: {
+        status: newStatus,
+        resolvedAt: ["RESOLVED", "CLOSED"].includes(newStatus) ? new Date() : null,
+      },
+    });
     
     return NextResponse.json(ticket);
     
