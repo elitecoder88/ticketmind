@@ -11,19 +11,50 @@ export default async function DashboardPage() {
     where: { status: "OPEN" },
   });
 
-  const stats = [
-    { label:"Total Tickets", value: totalTickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: true },
-    { label:"Open Tickets", value: openTickets.toString(), trend: 8, trendLabel: "vs last week", isPositiveGood: false },
-    { label:"Resolved Today", value: "12", trend: 15, trendLabel: "vs yesterday", isPositiveGood: true },
-    { label:"Avg Response Time", value: "24m", trend: -10, trendLabel: "vs last week", isPositiveGood: false },
-  ];
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
 
-  const categories = [
-    { name: "Account Access", count: 34, trend: 12 },
-    { name: "Billing", count: 28, trend: -3 },
-    { name: "Technical Issue", count: 22, trend: 8 },
-    { name: "Feature Request", count: 18, trend: 5 },
-    { name: "Onboarding", count: 12, trend: -6 },
+  const resolvedToday = await prisma.ticket.count({
+    where: { resolvedAt: { gte: startOfToday } },
+  });
+
+  const resolvedTickets = await prisma.ticket.findMany({
+    where: { resolvedAt: { not: null } },
+    select: { createdAt: true, resolvedAt: true },
+  });
+
+  const avgResolutionTime = resolvedTickets.length > 0
+  ? resolvedTickets.reduce((sum, ticket) => {
+      const diff = ticket.resolvedAt!.getTime() - ticket.createdAt.getTime();
+      return sum + diff;
+    }, 0) / resolvedTickets.length / (1000 * 60 * 60) // convert milliseconds to hours
+  : 0.0;
+
+  const categoryCounts = await prisma.ticket.groupBy({
+    by: ["aiCategory"],
+    _count: { id: true },
+    where: { aiCategory: { not: null } },
+  });
+
+
+  const formatCategory = (raw: string) =>
+    raw
+      .toLowerCase()
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, c => c.toUpperCase());
+
+  const categoryData = categoryCounts
+    .map((category) => ({
+      name: formatCategory(category.aiCategory!),
+      count: category._count.id,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  const stats = [
+    { label:"Total Tickets", value: totalTickets.toString() },
+    { label:"Open Tickets", value: openTickets.toString() },
+    { label:"Resolved Today", value: resolvedToday.toString() },
+    { label:"Avg Resolution Time", value: avgResolutionTime.toFixed(1) + "h" },
   ];
 
   const sentimentColors: Record<string, string> = {
@@ -46,21 +77,14 @@ export default async function DashboardPage() {
       <p className="mt-1 text-sm text-gray-500">Monitor your support pipeline at a glance.</p>
 
       {/* Stat cards grid */}
-      <div className="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 lg:grid-cols-4">
           {/* All 4 Card  */}
           {stats.map((stat) => {
-            const isGood = stat.isPositiveGood ? stat.trend >= 0 : stat.trend <= 0;
-
+  
             return (
               <div key={stat.label} className="bg-white p-6 rounded-xl shadow-sm border border-slate-50 hover:shadow-md transition-shadow">
                 <p className="text-sm text-gray-500">{stat.label}</p>
                 <p className="mt-2 text-3xl font-bold">{stat.value}</p>
-                <p className="mt-2 font-medium text-xs flex items-center gap-1">
-                  <span className={isGood ? "text-emerald-600" : "text-red-500"}>
-                    {stat.trend >= 0 ? "↑" : "↓"} {Math.abs(stat.trend)}%
-                  </span>
-                  <span className="text-gray-400">{stat.trendLabel}</span>
-                </p>
               </div>
             );
           })}
@@ -103,20 +127,11 @@ export default async function DashboardPage() {
             <h2 className="font-semibold">Trending Categories</h2>
           </div>
 
-          {categories.map((category) => {
+          {categoryData.map((category) => {
             return (
               <div key={category.name} className="px-5 py-3 border-b border-gray-100 last:border-b-0 flex justify-between items-center">
                 <p>{category.name}</p>
-
-                <div className="text-right">
-                  <p className="font-bold">{category.count}</p>
-                  <p className="text-xs">
-                    <span className={category.trend >= 0 ? "text-emerald-600" : "text-red-500"}>
-                      {category.trend >= 0 ? "↑" : "↓"} {Math.abs(category.trend)}%
-                    </span>
-                  </p>
-                </div>
-
+                <p className="font-bold">{category.count}</p>
               </div>
             );
           })}

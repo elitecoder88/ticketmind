@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Show } from "@clerk/nextjs";
 
 export default function Home() {
   return (
@@ -11,8 +12,17 @@ export default function Home() {
 
           {/* Right side: Buttons  */}
           <div className="flex items-center gap-4">
-            <Link href="/sign-in">Sign in</Link>
-            <Link href="/sign-up" className="bg-black text-white px-4 py-2 rounded-lg">Get started</Link>
+            <Show when="signed-out">
+              <Link href="/sign-in">Sign in</Link>
+              <Link href="/sign-up" className="bg-black text-white px-4 py-2 rounded-lg">
+                Get started
+              </Link>
+            </Show>
+            <Show when="signed-in">
+              <Link href="/dashboard" className="bg-black text-white px-4 py-2 rounded-lg">
+                Go to Dashboard
+              </Link>
+            </Show>
           </div>
         </div>
       </nav>
