@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage() {
   const tickets = await prisma.ticket.findMany({
     orderBy: { createdAt: "desc" },

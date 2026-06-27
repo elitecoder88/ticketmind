@@ -3,6 +3,8 @@ import { Clock, ShieldAlert, Inbox, CheckCircle } from "lucide-react";
 import SentimentChart from "@/components/sentiment-chart";
 import VelocityChart from "@/components/velocity-chart";
 
+export const dynamic = "force-dynamic";
+
 export default async function AnalyticsPage() {
 
   // SIMPLE COUNTS QUERIES

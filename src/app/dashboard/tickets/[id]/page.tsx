@@ -4,6 +4,8 @@ import StatusUpdate from "@/components/status-update";
 import PriorityBadge from "@/components/priority-badge";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function TicketDetailPage({ 
   params 
 }: { 

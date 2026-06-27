@@ -2,12 +2,15 @@
 
 A clean, intelligent customer support dashboard that takes incoming tickets, runs them through an AI layer to analyze sentiment and auto-assign categories, and displays real-time team analytics. Built to eliminate the manual mess of support queues.
 
+> 🟢 **Live in production:** [ticketmind.vercel.app](https://ticketmind.vercel.app/)
+
 ---
 
 ## 🔗 Links
 
+*   **Live Demo:** [ticketmind.vercel.app](https://ticketmind.vercel.app/)
 *   **GitHub Repo:** [github.com/elitecoder88/ticketmind](https://github.com/elitecoder88/ticketmind)
-
+  
 ---
 
 ## 🔥 Features
@@ -112,7 +115,7 @@ Head to [http://localhost:3000](http://localhost:3000) to see your local version
 ---
 
 ## 🗺️ Roadmap
-*   **Milestone 6 (Current):** Push the final live production build directly to Vercel.
+*   **Milestone 6 (Shipped):** Production deployment live on Vercel at [ticketmind.vercel.app](https://ticketmind.vercel.app/).
 *   **Omnichannel Ingestion:** Build an email webhook parsing loop to automatically convert incoming client emails into structured tickets.
 *   **Agent Assist Actions:** Implement single-click AI reply drafting inside the ticket workspace detail views.
 *   **Real-time Queue Sync:** Add WebSockets or live polling to update queue velocity statistics without needing manual page refreshes.
